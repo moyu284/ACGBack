@@ -5,19 +5,19 @@
       <LatestList></LatestList>
     </el-main>
     <el-aside width="500px">
+      <HotTopic></HotTopic>
     </el-aside>
   </el-container>
 </template>
 
 <script>
-// import Waterfall from 'vue-waterfall'
-// import WaterfallSlot from 'vue-waterfall'
 import LatestList from '../components/LatestList'
 import GroupList from '../components/GroupList'
+import HotTopic from "./HotTopic";
 
 export default {
   name: 'Main',
-  components: {GroupList, LatestList},
+  components: {GroupList, LatestList, HotTopic},
   data() {
     return {
       items: []
