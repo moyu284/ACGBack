@@ -7,7 +7,9 @@
       <ul class="infinite-list">
         <li>
           <div class="topic">
-            <el-link>无下划线</el-link>
+            <el-link>
+              <router-link to="/details">福冈27日将举办《夏目友人帐》原画展</router-link>
+            </el-link>
           </div>
         </li>
       </ul>

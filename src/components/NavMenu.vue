@@ -22,7 +22,7 @@
         <el-menu-item index="4">首页</el-menu-item>
         <el-menu-item index="5">首页</el-menu-item>
         <el-menu-item index="6">登录</el-menu-item>
-        <el-menu-item index="7" style="float: right;">
+        <el-menu-item style="float: right;">
           <el-input
             type="text"
             suffix-icon="el-icon-search"
@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import Affix from 'easy-affix'
 
 export default {
   name: 'NavMenu',

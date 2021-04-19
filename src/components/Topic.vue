@@ -5,7 +5,9 @@
     </div>
     <div id="topic">
       <div>
-        <el-link target="_blank">福冈27日将举办《夏目友人帐》原画展</el-link>
+        <el-link target="_blank" underline="false">
+          <router-link to="/details">福冈27日将举办《夏目友人帐》原画展</router-link>
+        </el-link>
       </div>
       <div id="topicInfo">
         <span style="float: left">
