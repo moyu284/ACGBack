@@ -5,18 +5,18 @@
     </div>
     <div id="topic">
       <div>
-        <el-link target="_blank" underline="false">
-          <router-link to="/details">福冈27日将举办《夏目友人帐》原画展</router-link>
+        <el-link target="_blank" :underline="true" primary >
+          <router-link :to="'/details?id='+topic.pid">{{ topic.subject }}</router-link>
         </el-link>
       </div>
       <div id="topicInfo">
         <span style="float: left">
-          <el-button type="text">天下漫闻</el-button>
+          <el-button type="text">{{ topic.forums }}</el-button>
         </span>
         <span style="float: right">
-          <el-button type="text" style="color: #303133">admin</el-button>
+          <el-button type="text" style="color: #303133">{{ topic.author }}</el-button>
           <el-button type="text" style="color: #303133">
-            10<i class="el-icon-view el-icon--right"></i>
+            {{ topic.view }}<i class="el-icon-view el-icon--right"></i>
           </el-button>
         </span>
       </div>
@@ -26,7 +26,18 @@
 
 <script>
 export default {
-  name: "Topic"
+  name: "Topic",
+  props:{
+    topic: {
+      type:Object,
+      required:true
+    }
+  },
+  data(){
+    return{
+
+    }
+  }
 }
 </script>
 

@@ -5,11 +5,12 @@
     </div>
     <div>
       <ul class="infinite-list">
-        <li>
+        <li v-for=" topic in hotTopic" :key="hotTopic.pid">
           <div class="topic">
             <el-link>
-              <router-link to="/details">福冈27日将举办《夏目友人帐》原画展</router-link>
+              <router-link :to="'/details?id='+topic.pid">{{ topic.subject }}</router-link>
             </el-link>
+            <el-divider></el-divider>
           </div>
         </li>
       </ul>
@@ -19,7 +20,13 @@
 
 <script>
 export default {
-  name: "HotTopic"
+  name: "HotTopic",
+  props:{
+    hotTopic:{
+      type:Array,
+      required:true
+    }
+  }
 }
 </script>
 

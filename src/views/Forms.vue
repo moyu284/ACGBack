@@ -2,31 +2,24 @@
   <el-container>
     <el-main>
       <el-card class="card">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>动漫</el-breadcrumb-item>
-          <el-breadcrumb-item>动漫1</el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-card>
-      <el-card class="card">
         <div slot="header">
-          <span>动漫1</span>
+          <span><b>{{forumsName}}</b></span>
         </div>
         <ul>
-          <li>
-            <Topic></Topic>
+          <li v-for="topic in topicList" :key="topic.id">
+            <Topic :topic="topic"></Topic>
           </li>
         </ul>
         <center>
           <el-pagination
             layout="prev, pager, next"
-            :total="50">
+            :total="topicList.length">
           </el-pagination>
         </center>
       </el-card>
     </el-main>
     <el-aside width="500px">
-      <HotTopic></HotTopic>
+      <HotTopic :hot-topic="hotTopic"></HotTopic>
     </el-aside>
   </el-container>
 </template>
@@ -34,10 +27,45 @@
 <script>
 import HotTopic from "../components/HotTopic";
 import Topic from "../components/Topic";
+import {apiGetFormsName, apiGetForumsTopic, apiGetThreadsHotTopic} from "../request/api";
 
 export default {
   name: "Forms",
-  components: {HotTopic, Topic}
+  components: {HotTopic, Topic},
+  data() {
+    return {
+      hotTopic: [],
+      topicList: [],
+      forumsName: ''
+    }
+  },
+  created() {
+    this.getData()
+  },
+  watch: {
+    "$route": "getData"
+  },
+  methods: {
+    getData: function () {
+      const that = this
+      this.forums = this.$route.query.forums
+
+      apiGetForumsTopic({id: this.forums})
+        .then(function (response) {
+          that.topicList = response.result
+        })
+
+      apiGetThreadsHotTopic({id: this.forums})
+        .then(function (response) {
+          that.hotTopic = response.result;
+        })
+
+      apiGetFormsName({id: this.forums})
+        .then(function (response) {
+          that.forumsName = response.result
+        })
+    }
+  }
 }
 </script>
 

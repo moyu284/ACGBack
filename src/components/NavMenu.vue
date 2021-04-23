@@ -1,49 +1,21 @@
 <template>
   <el-row type="flex" justify="start" align="middle"
           style="hebox-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
-    <el-col :span="15" :offset="2">
-      <el-menu mode="horizontal" menu-trigger="hover" router>
-        <el-menu-item index="/">
-          <img src="../../static/pic/logo.png" style="height: 75px;width: 150px">
-        </el-menu-item>
-        <el-menu-item index="/">首页</el-menu-item>
-        <el-submenu index="/forms">
-          <template slot="title">动漫</template>
-          <el-menu-item index="/forms">动漫1</el-menu-item>
-          <el-menu-item index="2-2">动漫1</el-menu-item>
-          <el-menu-item index="2-3">动漫1</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">游戏</template>
-          <el-menu-item index="3-1">游戏1</el-menu-item>
-          <el-menu-item index="3-2">游戏1</el-menu-item>
-          <el-menu-item index="3-3">游戏1</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="4">首页</el-menu-item>
-        <el-menu-item index="5">首页</el-menu-item>
-        <el-menu-item index="6">登录</el-menu-item>
-        <el-menu-item style="float: right;">
-          <el-input
-            type="text"
-            suffix-icon="el-icon-search"
-            placeholder="搜索">
-          </el-input>
-        </el-menu-item>
-      </el-menu>
+    <el-col :span="13" :offset="2">
+      <Navigation :menu-list="menuList" ></Navigation>
     </el-col>
-    <el-col :span="3">
+    <el-col :span="6">
       <el-menu mode="horizontal" menu-trigger="hover" router>
-<!--        <el-menu-item index="1">-->
-<!--          <el-avatar size="large" src="../../static/pic/head.jpg" fit="fill"></el-avatar>-->
-<!--        </el-menu-item>-->
-        <el-menu-item index="/login" >登录</el-menu-item>
-        <el-menu-item index="/register" >注册</el-menu-item>
-      </el-menu>
-    </el-col>
-    <el-col :span="1">
-      <el-menu mode="horizontal" menu-trigger="hover">
-        <el-menu-item index="1">
-          <el-button style="background-color: #FF4B8B;">
+        <el-menu-item index="/userInfo" v-if="this.$store.state.loginSuccess">
+          <el-avatar size="large" :src="this.$store.state.user.headerimg" fit="fill"></el-avatar>
+        </el-menu-item>
+        <el-menu-item index="/userInfo" v-if="this.$store.state.loginSuccess"><i class="el-icon-user-solid"/></el-menu-item>
+        <el-menu-item v-if="this.$store.state.loginSuccess"><i class="el-icon-switch-button" @click="signOut()"/></el-menu-item>
+
+        <el-menu-item index="/login" v-if="!this.$store.state.loginSuccess">登录</el-menu-item>
+        <el-menu-item index="/register" v-if="!this.$store.state.loginSuccess">注册</el-menu-item>
+        <el-menu-item >
+          <el-button style="background-color: #FF4B8B;" @click="toPublish">
             发布
           </el-button>
         </el-menu-item>
@@ -53,10 +25,44 @@
 </template>
 
 <script>
+import Navigation from "./Navbar/Navigation";
+import NavigationItem from "./Navbar/NavigationItem";
+import axios from "axios";
+import {apiGetForums} from "../request/api";
+import store from "../store";
+import router from "../router";
+
 
 export default {
   name: 'NavMenu',
-  components: {
+  components: {Navigation, NavigationItem},
+  data() {
+    return {
+      menuList: [],
+      user: {}
+    }
+  },
+  created: function () {
+    this.getFormus()
+  },
+  methods: {
+    toPublish: function () {
+      this.$router.push('/publish')
+    },
+    getFormus: function () {
+      const that = this;
+      apiGetForums().then(function (response) {
+        // console.log(response)
+        that.menuList = response.result
+      })
+    },
+    signOut: function (){
+      localStorage.clear()
+      store.commit("setToken",'')
+      store.commit("setUser",{})
+      store.commit("setLoginSuccess",false)
+      router.replace("/")
+    }
   }
 }
 </script>

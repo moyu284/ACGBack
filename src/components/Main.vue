@@ -1,11 +1,10 @@
 <template>
   <el-container>
     <el-main>
-      <GroupList></GroupList>
-      <LatestList></LatestList>
+      <LatestList :topic-list="topicList"></LatestList>
     </el-main>
     <el-aside width="500px">
-      <HotTopic></HotTopic>
+      <HotTopic :hot-topic="hotTopic"></HotTopic>
     </el-aside>
   </el-container>
 </template>
@@ -14,22 +13,33 @@
 import LatestList from '../components/LatestList'
 import GroupList from '../components/GroupList'
 import HotTopic from "./HotTopic";
+import {apiGetHotTopic, apiGetLatestList} from "../request/api";
 
 export default {
   name: 'Main',
   components: {GroupList, LatestList, HotTopic},
   data() {
     return {
-      items: []
+      topicList: [],
+      hotTopic: []
     }
   },
+  created() {
+    this.getLatestList()
+    this.getHotPic()
+  },
   methods: {
-    getData: function () {
-      var that = this;
-      axios.get()
-        .then((response) => {
-
-        })
+    getLatestList() {
+      const that = this
+      apiGetLatestList().then(function (response){
+        that.topicList = response.result
+      })
+    },
+    getHotPic() {
+      const that = this
+      apiGetHotTopic().then(function (response) {
+        that.hotTopic = response.result
+      })
     }
   }
 }

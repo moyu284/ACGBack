@@ -4,15 +4,42 @@
       <el-avatar size="large" src="../../static/pic/head.jpg"></el-avatar>
     </div>
     <div id="userInfo">
-      <span>admin</span>
-      <span>2021-04-17 12:23:32</span>
+      <span>{{ username }}</span>
+      <span>{{ time | formatDate}}</span>
     </div>
   </div>
 </template>
 
 <script>
+import {formatDate} from "../public/FormatDate";
+import axios from "axios";
+
 export default {
-  name: "DetailsHeader"
+  name: "DetailsHeader",
+  props:{
+    time:{},
+    user:{
+      type: Object,
+      default: () => {}
+    }
+  },
+  computed:{
+    username(){
+      return this.user ? this.user.username  :  'null'
+    }
+  },
+  mounted() {
+    console.log(this.user)
+  },
+  methods:{
+
+  },
+  filters: {
+    formatDate(time) {
+      var date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+    }
+  }
 }
 </script>
 

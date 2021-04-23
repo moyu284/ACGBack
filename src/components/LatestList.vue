@@ -3,9 +3,9 @@
     <div slot="header" class="clearfix">
       <span>最新话题</span>
     </div>
-    <ul class="infinite-list" style="overflow:auto" v-infinite-scroll="load">
-      <li v-for="i in count" class="infinite-list-item">
-        <Topic></Topic>
+    <ul style="overflow:auto">
+      <li v-for="topic in topicList" :key="topic.id">
+        <Topic :topic="topic"></Topic>
       </li>
     </ul>
   </el-card>
@@ -17,15 +17,20 @@ import Topic from "./Topic";
 export default {
   name: "LatestList",
   components: {Topic},
+  props:{
+    topicList:{
+      type:Array,
+      required:true
+    }
+  },
+  created() {
+  },
   data() {
     return {
-      count: 0
     }
   },
   methods: {
-    load() {
-      this.count = 2
-    }
+
   }
 
 }

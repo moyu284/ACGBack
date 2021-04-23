@@ -6,11 +6,11 @@
       </div>
       <div>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="auto">
-          <el-form-item label="用户名" prop="pass">
-            <el-input type="text"></el-input>
+          <el-form-item label="用户名" prop="username">
+            <el-input type="text" v-model="ruleForm.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="checkPass">
-            <el-input type="password"></el-input>
+          <el-form-item label="密码" prop="userpw">
+            <el-input type="password" v-model="ruleForm.userpw" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item>
             <div id="loginButton">
@@ -24,36 +24,46 @@
 </template>
 
 <script>
+import {apiLogin} from "../request/api";
+import store from "../store";
+import router from "../router";
 export default {
   name: "Login",
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
-      }
-    };
     return {
       ruleForm: {
-        name: '',
-        pass: ''
+        username: '',
+        userpw: ''
       },
       rules: {
-        pass: [
-          { validator: validatePass, trigger: 'blur' }
-        ]
       }
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      const that = this
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert('submit!');
+          apiLogin({
+            username: this.ruleForm.username,
+            userpw: this.ruleForm.userpw
+          }).then(function (response){
+            const success = response.success
+            if (success){
+              store.commit("setToken",response.result.token)
+              store.commit("setUser",response.result.user)
+              store.commit("setLoginSuccess",true)
+              router.replace("/")
+            }else {
+              that.$refs.ruleForm.resetFields();
+              that.$message({
+                message: response.message,
+                type: 'error',
+                duration: '2000',
+              })
+            }
+          })
+          // alert('submit!');
         } else {
           console.log('error submit!!');
           return false;
