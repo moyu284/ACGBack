@@ -13,15 +13,22 @@
       <el-card class="card">
         <div>快速回复</div>
         <el-divider></el-divider>
-        <div>
+        <div v-if="this.$store.state.loginSuccess">
           <el-form>
             <el-form-item>
-              <Tinymce></Tinymce>
+              <Tinymce ref="Tinymce"></Tinymce>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('numberValidateForm')" disabled>提交</el-button>
+              <el-button type="primary" @click="comment()">回复</el-button>
             </el-form-item>
           </el-form>
+        </div>
+        <div v-if="!this.$store.state.loginSuccess">
+          <p>
+            <b>
+              请登录后回复
+            </b>
+          </p>
         </div>
       </el-card>
       <el-card class="card">
@@ -39,17 +46,17 @@
 </template>
 
 <script>
-
-
 import DetailsHeader from "../components/DetailsHeader";
 import HotTopic from "../components/HotTopic";
 import Tinymce from "../components/Tinymce";
 import Comment from "../components/Comment";
-import {apiComment, apiGetThreads, apiGetThreadsHotTopic} from "../request/api";
+import {apiComment, apiGetThreads, apiGetThreadsHotTopic, apiSubmitComment} from "../request/api";
+import {Message} from "element-ui";
 
 export default {
   name: "Details",
   components: {HotTopic, DetailsHeader, Tinymce, Comment},
+  inject: ['reload'], //注入
   data() {
     return {
       id: '',
@@ -62,7 +69,6 @@ export default {
   },
   mounted() {
     this.getData()
-    // this.getThreadsHotTopic()
   },
   watch: {
     "$route": "getData"
@@ -73,21 +79,40 @@ export default {
       this.id = this.$route.query.id
       apiGetThreads({id: this.id})
         .then(function (response) {
-          console.log(response)
+          // console.log(response)
           that.thread = response.result.threads
-          that.user = response.user
+          that.user = response.result.user
         }).then(function () {
         apiGetThreadsHotTopic({id: that.thread.fid})
           .then(function (response) {
-            console.log(response)
+            // console.log(response)
             that.hotTopic = response.result;
-            console.log(that.hotTopic)
+            // console.log(that.hotTopic)
           })
         apiComment({pid: that.thread.pid})
           .then(function (response) {
-            console.log(response)
+            // console.log(response)
             that.commentList = response.result
           })
+      })
+    },
+    comment:function (){
+      const that = this
+      console.log(this.$refs.Tinymce.tinymceHtml)
+      apiSubmitComment({
+        pid: this.thread.pid,
+        fid: this.thread.fid,
+        author: this.$store.state.user.username,
+        authorid: this.$store.state.user.id,
+        content: this.$refs.Tinymce.tinymceHtml
+      }).then(response => {
+          Message({
+            message: response.result,
+            type: 'success',
+            duration: 2000
+          })
+          that.$refs.Tinymce.tinymceHtml = ''
+        that.reload()
       })
     }
   }

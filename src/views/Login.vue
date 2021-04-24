@@ -53,6 +53,9 @@ export default {
               store.commit("setToken",response.result.token)
               store.commit("setUser",response.result.user)
               store.commit("setLoginSuccess",true)
+              localStorage.setItem("token",response.result.token)
+              localStorage.setItem("user",JSON.stringify(response.result.user))
+              localStorage.setItem("loginSuccess", '1')
               router.replace("/")
             }else {
               that.$refs.ruleForm.resetFields();

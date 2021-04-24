@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavMenu></NavMenu>
-    <router-view></router-view>
+    <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>
 
@@ -11,9 +11,14 @@ import NavMenu from './components/NavMenu'
 export default {
   name: 'App',
   components: {NavMenu},
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   data() {
     return {
-      forums: []
+      isRouterAlive: true
     }
   },
   created() {
@@ -24,12 +29,20 @@ export default {
         pluginModelPath: 'live2d-widget-model-koharu/assets/',
         tagMode: false,
         debug: false,
-        model: { jsonPath: '/static/live2dw/live2d-widget-model-koharu/assets/koharu.model.json' },
-        display: { position: 'right', width: 150, height: 300 },
-        mobile: { show: true },
+        model: {jsonPath: '/static/live2dw/live2d-widget-model-koharu/assets/koharu.model.json'},
+        display: {position: 'right', width: 150, height: 300},
+        mobile: {show: true},
         log: false
       })
     }, 1000)
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    }
   }
 }
 </script>

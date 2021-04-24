@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex">
     <div>
-      <el-avatar size="large" src="../../static/pic/head.jpg"></el-avatar>
+      <el-avatar size="large" :src="user.headerimg"></el-avatar>
     </div>
     <div id="userInfo">
       <span>{{ username }}</span>
@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.user)
+    // console.log(this.user)
   },
   methods:{
 

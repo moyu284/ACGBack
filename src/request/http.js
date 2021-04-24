@@ -7,24 +7,13 @@ import {getToken} from "../public/auth";
 import router from "../router";
 import el from "element-ui/src/locale/lang/el";
 // 环境
-axios.defaults.baseURL ='http://localhost:8081/';   //  要请求的后台地址
+axios.defaults.baseURL = 'http://localhost:8081/';   //  要请求的后台地址
 // 请求超时
-axios.defaults.timeout =30000;
+axios.defaults.timeout = 30000;
 //  post 请求头
-axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 axios.defaults.responseType = 'json'
 axios.defaults.withCredentials = true
-
-// create an axios instance   创建axios实例
-// const service = axios.create({
-//   baseURL: 'http://localhost:8081/', // api 的 base_url
-//   timeout: 5000, // request timeout  设置请求超时时间
-//   responseType: "json",
-//   withCredentials: true, // 是否允许带cookie这些
-//   headers: {
-//     "Content-Type": "application/json;charset=utf-8"
-//   }
-// })
 
 // create an axios instance
 axios.interceptors.request.use(
@@ -36,11 +25,12 @@ axios.interceptors.request.use(
       // config.data = JSON.stringify(config.data);
       // 温馨提示,若是贵公司的提交能直接接受json 格式,可以不用 qs 来序列化的
     } else {
-      if (store.getters.token) {
+      if (localStorage.getItem("token")) {
         // 若是有做鉴权token , 就给头部带上token
         // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
         // 若是需要跨站点,存放到 cookie 会好一点,限制也没那么多,有些浏览环境限制了 localstorage (隐身模式)的使用
-        config.headers['token'] = getToken()
+        // config.headers['token'] = getToken()
+        config.headers.token = getToken()
       }
     }
     return config;
@@ -60,7 +50,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     const code = response.data.code
-    console.log("code:"+code)
+    // console.log("code:"+code)
 
     // console.log(response.data)
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
@@ -86,14 +76,14 @@ axios.interceptors.response.use(
         // 清除本地token和清空vuex中token对象
         // 跳转登录页面
         case 403:
-          this.$message({
+          Message({
             message: '登录过期，请重新登录',
             duration: 1000,
-            forbidClick: true
           });
           // 清除token
           localStorage.removeItem('token');
           store.commit('loginSuccess', null);
+          store.commit('user', {})
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {
             router.replace({
@@ -107,34 +97,37 @@ axios.interceptors.response.use(
 
         // 404请求不存在
         case 404:
-          this.$message({
+          Message({
             message: '网络请求不存在',
             duration: 1500,
-            forbidClick: true
+          });
+          break;
+        case 100:
+          console.log("100错误")
+          Message({
+            message: response.data.message,
+            type: 'warning',
+            duration: 1500
           });
           break;
         // 其他错误，直接抛出错误提示
         default:
-          this.$message({
-            message: error.response.data.message,
-            duration: 1500,
-            forbidClick: true
+          console.log("其他")
+          Message({
+            message: response.data.message,
+            type: 'error',
+            duration: 2000
           });
       }
     }
 
   },
-  // 服务器状态码不是2开头的的情况
-  // 这里可以跟你们的后台开发人员协商好统一的错误状态码
-  // 然后根据返回的状态码进行一些操作，例如登录过期提示，错误提示等等
-  // 下面列举几个常见的操作，其他需求可自行扩展
   error => {
-    if (error.response.code) {
-      console.log(error.response)
+    if (error.data.code) {
       Message({
-        message: error.message,
+        message: error.data.message,
         type: 'error',
-        duration: 5 * 1000
+        duration: 1000
       })
       return error.response;
     }

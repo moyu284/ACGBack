@@ -24,12 +24,12 @@
         </el-tab-pane>
         <el-tab-pane label="个人信息">
           <div style="width: 500px">
-            <el-form label-width="auto">
-              <el-form-item label="邮箱">
-                <el-input type="text"></el-input>
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="auto" label-position="right">
+              <el-form-item label="邮箱" prop="email">
+                <el-input type="text" v-model="ruleForm.email"></el-input>
               </el-form-item>
-              <el-form-item label="手机号">
-                <el-input type="text"></el-input>
+              <el-form-item label="手机号" prop="phone">
+                <el-input type="text" v-model="ruleForm.phone"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
@@ -44,23 +44,95 @@
 </template>
 
 <script>
-import {apiUploadHeader} from "../request/api";
+import {apiLogin, apiUpdateUserInfo, apiUploadHeader} from "../request/api";
 import store from "../store";
+import router from "../router";
+
 export default {
   name: "UserInfo",
-  methods:{
-    uploadImage:function (response, file, fileList){
+  data() {
+    const checkPhone = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('手机号不能为空'));
+      }
+      setTimeout(() => {
+        if (value !== '') {
+          const reg = /^1[3456789]\d{9}$/;
+          if (!reg.test(value)) {
+            callback(new Error('请输入有效的手机号码'));
+          }
+        }
+        callback();
+      }, 1000);
+    };
+    const checkEmail = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('邮箱不能为空'));
+      }
+      setTimeout(() => {
+        if (value !== '') {
+          const reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的邮箱'));
+          }
+        }
+        callback();
+      }, 1000);
+    };
+    return {
+      ruleForm: {
+        email: this.$store.state.user.email,
+        phone: this.$store.state.user.phone
+      },
+      rules: {
+        phone: [
+          {validator: checkPhone, trigger: 'blur'}
+        ],
+        email: [
+          {validator: checkEmail, trigger: 'blur'}
+        ]
+      }
+    }
+  },
+  methods: {
+    uploadImage: function (response, file, fileList) {
       const that = this
-      console.log(response)
+      // console.log(response)
       apiUploadHeader({
         id: that.$store.state.user.id,
         headerimg: response.result
-      }).then(function (response){
-        store.commit("setUser",response.result)
       })
+      store.commit("setUserHeader", response.result)
+    },
+    submitForm(formName) {
+      const that = this
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          apiUpdateUserInfo({
+            id: this.$store.state.user.id,
+            email: this.ruleForm.email,
+            phone: this.ruleForm.phone
+          }).then(response => {
+            that.$message({
+              message: response.result,
+              type: 'success',
+              duration: 2000,
+              center: true
+            })
+            store.commit("setUserPhone",that.ruleForm.phone)
+            store.commit("setUserEmail",that.ruleForm.email)
+          })
+          // alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
-
 }
 </script>
 

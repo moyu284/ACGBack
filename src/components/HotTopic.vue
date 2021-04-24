@@ -5,10 +5,10 @@
     </div>
     <div>
       <ul class="infinite-list">
-        <li v-for=" topic in hotTopic" :key="hotTopic.pid">
+        <li v-for=" topic in hotTopic" :key="hotTopic.id">
           <div class="topic">
             <el-link>
-              <router-link :to="'/details?id='+topic.pid">{{ topic.subject }}</router-link>
+              <router-link :to="'/details?id='+topic.id">{{ topic.subject }}</router-link>
             </el-link>
             <el-divider></el-divider>
           </div>

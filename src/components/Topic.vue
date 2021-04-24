@@ -1,12 +1,12 @@
 <template>
   <div id="li-div">
     <div id="userHead">
-      <img src="../../static/pic/1.jpg" height="48px" width="48px"/>
+      <img :src="topic.userHeader" height="48px" width="48px"/>
     </div>
     <div id="topic">
       <div>
         <el-link target="_blank" :underline="true" primary >
-          <router-link :to="'/details?id='+topic.pid">{{ topic.subject }}</router-link>
+          <router-link :to="'/details?id='+topic.id">{{ topic.subject }}</router-link>
         </el-link>
       </div>
       <div id="topicInfo">

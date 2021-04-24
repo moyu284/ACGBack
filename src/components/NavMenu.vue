@@ -27,7 +27,6 @@
 <script>
 import Navigation from "./Navbar/Navigation";
 import NavigationItem from "./Navbar/NavigationItem";
-import axios from "axios";
 import {apiGetForums} from "../request/api";
 import store from "../store";
 import router from "../router";
@@ -39,7 +38,8 @@ export default {
   data() {
     return {
       menuList: [],
-      user: {}
+      user: {},
+      redirect: router.currentRoute.fullPath
     }
   },
   created: function () {
@@ -47,13 +47,19 @@ export default {
   },
   methods: {
     toPublish: function () {
-      this.$router.push('/publish')
+      this.$router.push({
+        path: '/publish',
+        query:{
+          redirect: router.currentRoute.fullPath
+        }
+      })
     },
     getFormus: function () {
       const that = this;
       apiGetForums().then(function (response) {
         // console.log(response)
-        that.menuList = response.result
+        that.menuList = getTreeData(response.result)
+        sessionStorage.setItem("formsList",JSON.stringify(that.menuList))
       })
     },
     signOut: function (){
@@ -64,6 +70,21 @@ export default {
       router.replace("/")
     }
   }
+}
+
+function getTreeData(data) {
+  // 循环遍历json数据
+  for(let i=0;i<data.length;i++){
+
+    if(data[i].children.length<1){
+      // children若为空数组，则将children设为undefined
+      data[i].children=undefined;
+    }else {
+      // children若不为空数组，则继续 递归调用 本方法
+      getTreeData(data[i].children);
+    }
+  }
+  return data;
 }
 </script>
 
