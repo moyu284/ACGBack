@@ -4,33 +4,33 @@
 import { get,post, $delete, put } from "./http";
 import da from "element-ui/src/locale/lang/da";
 
-// 获取导航栏列表
-export const apiGetForums = data => get("api/forums/getForums", data)
-// 获得版块列表
-export const apiGetFormsName = data => get("api/forums/getName",data)
-// 获取帖子详情
-export const apiGetThreads = data => get("api/threads/getThread",data)
-// 获取帖子所在版块的最热话题
-export const apiGetThreadsHotTopic = data => get("api/topic/getThreadsHotTopic",data)
-// 获得帖子评论
-export const apiComment = data => get("api/threads/getComment",data)
-// 发表评论
-export const apiSubmitComment = data => post("api/threads/submitComment",data)
-// 获得版面帖子列表
-export const apiGetForumsTopic = data => get("api/topic/getForumsTopic",data)
-// 上传头像
-export const apiUploadHeader = data => post("api/user/changeHeader",data)
-// 发帖与回复上传图片
-export const apiUploadImage = data => post("tinymce/imageUpload",data)
-// 获取首页帖子列表
-export const apiGetLatestList = data => get("api/topic/getLatestList",data)
-// 获取首页热门话题
-export const apiGetHotTopic = data => get("api/topic/getHotTopic",data)
 // 登录
-export const apiLogin = data => post("api/user/login",data)
-// 更新个人信息
-export const apiUpdateUserInfo = data => post("api/user/updateInfo",data)
-// 注册
-export const apiRegister = data => post("api/user/register",data)
-// 发表帖子
-export const apiSubmitThreads = data => post("api/threads/submitThreads",data)
+export const apiLogin = data => post("api/user/admin/login",data)
+// 上传轮播图
+export const apiUploadCarouse = data => post("/api/carouse/admin/upload",data)
+// 获得轮播图列表
+export const apiGetCarouseList = data => get("/api/carouse/admin/getList",data)
+// 删除轮播图
+export const apiDeleteCarouse = data => get("/api/carouse/admin/delete",data)
+// 获取分区板块列表
+export const apiGetForums = data => get("api/forums/admin/getForums", data)
+// 添加分区板块
+export const apiAddForums = data => post("api/forums/admin/add",data)
+// 修改分区板块
+export const apiUpdateForums = data => post("api/forums/admin/update",data)
+// 删除分区板块
+export const apiDeleteForums = data => post("api/forums/admin/delete",data)
+// 获取子版块上级分区板块列表
+export const apiGetSubForums = data => get("api/forums/admin/list", data)
+// 获取所有板块与分区
+export const apiGetAllForums = data => get("api/forums/admin/getForumsList",data)
+// 获取帖子
+export const apiGetTopic = data => get("api/topic/admin/getForumsTopic",data)
+// 删除帖子
+export const apiDeleteTopic = data => post("api/topic/admin/delete",data)
+// 获取所有用户
+export const apiGetAllUser = data => get("api/user/admin/list",data)
+// 修改用户信息
+export const apiUpdateUser = data => post("api/user/admin/update",data)
+// 删除用户
+export const apiDeleteUser = data => post("api/user/admin/delete",data)

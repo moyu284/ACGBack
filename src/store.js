@@ -4,9 +4,9 @@ import Vuex from 'vuex';
 Vue.use(Vuex)
 
 const state = {
-  token: localStorage.getItem("token") || '',
-  loginSuccess: Number(JSON.parse(localStorage.getItem("loginSuccess"))) || 0,
-  user:JSON.parse(localStorage.getItem("user")) || {}
+  token: sessionStorage.getItem("token") || '',
+  loginSuccess: Number(JSON.parse(sessionStorage.getItem("loginSuccess"))) || 0,
+  user:JSON.parse(sessionStorage.getItem("user")) || {}
 }
 
 const store = new Vuex.Store({
@@ -23,15 +23,15 @@ const store = new Vuex.Store({
     },
     setUserHeader(state,value){
       state.user.headerimg = value
-      localStorage.setItem("user",JSON.stringify(state.user))
+      sessionStorage.setItem("user",JSON.stringify(state.user))
     },
     setUserPhone(state,value){
       state.user.phone = value;
-      localStorage.setItem("user",JSON.stringify(state.user))
+      sessionStorage.setItem("user",JSON.stringify(state.user))
     },
     setUserEmail(state,value){
       state.user.email = value;
-      localStorage.setItem("user",JSON.stringify(state.user))
+      sessionStorage.setItem("user",JSON.stringify(state.user))
     }
   },
   actions: {
