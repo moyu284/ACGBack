@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <span>分区与板块：</span>
+      <span>分区与版块：</span>
 
       <el-cascader
         v-model="selectedOptions"
@@ -14,11 +14,11 @@
       <el-button type="primary" @click="clickAddDialog">添加</el-button>
       <el-dialog
         :visible.sync="addDialog"
-        title="添加板块"
+        title="添加版块"
         width="30%">
         <span>
           <el-form ref="ruleForm" :model="ruleForm" :rules="rules">
-            <el-form-item label="板块名称" prop="name">
+            <el-form-item label="版块名称" prop="name">
               <el-input v-model="ruleForm.name"></el-input>
             </el-form-item>
 
@@ -56,11 +56,11 @@
             </el-button>
             <el-dialog
               :visible.sync="updateDialog"
-              title="修改板块"
+              title="修改版块"
               width="30%">
               <span>
                 <el-form ref="ruleForm" :model="ruleForm" :rules="rules">
-                  <el-form-item label="板块名称" prop="name">
+                  <el-form-item label="版块名称" prop="name">
                     <el-input v-model="ruleForm.name"></el-input>
                   </el-form-item>
                 </el-form>

@@ -20,10 +20,10 @@
     <el-submenu index="/plate">
       <template slot="title">
         <i class="el-icon-s-grid"></i>
-        <span slot="title">板块管理</span>
+        <span slot="title">版块管理</span>
       </template>
       <el-menu-item index="/plate/plate">
-        板块管理
+        父版块管理
       </el-menu-item>
       <el-menu-item index="/plate/subPlate">
         子板块管理

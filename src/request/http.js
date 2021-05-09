@@ -115,6 +115,14 @@ axios.interceptors.response.use(
             duration: 1500
           });
           break;
+        case 500:
+          console.log("500错误")
+          Message({
+            message: response.data.message,
+            type: 'error',
+            duration: 1500
+          });
+          break;
         // 其他错误，直接抛出错误提示
         default:
           console.log("其他")

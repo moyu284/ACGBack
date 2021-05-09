@@ -127,13 +127,22 @@ export default {
     successUpload(response, file, fileList) {
       const self = this
       console.log(response)
-      this.fileList = []
-      apiUploadCarouse({
-        path: response.result
-      }).then(response => {
-        self.tableData = response.result
-        Message.success("上传成功")
-      })
+      if (response.code === 500){
+        Message({
+          message: response.message,
+          type: 'error',
+          duration: 1000
+        })
+        this.fileList = []
+      }else {
+        this.fileList = []
+        apiUploadCarouse({
+          path: response.result
+        }).then(response => {
+          self.tableData = response.result
+          Message.success("上传成功")
+        })
+      }
     }
   }
 }

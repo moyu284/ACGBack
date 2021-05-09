@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <span>分区与板块：</span>
+      <span>分区与版块：</span>
 
       <el-cascader
         ref="checked"
